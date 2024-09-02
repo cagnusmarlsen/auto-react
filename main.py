@@ -24,6 +24,7 @@ def updoot(driver, blog_url):
     driver.get(blog_url)
     time.sleep(3)
     
+    # Randomly scrolls the page
     scroll_height = driver.execute_script("return document.body.scrollHeight")
     for i in range(5):
         driver.execute_script(f"window.scrollTo(0, {scroll_height * random.uniform(0.2, 0.8)});")
@@ -45,7 +46,6 @@ def updoot(driver, blog_url):
     fire = driver.find_element(By.XPATH, "//*[@id='reaction-butt-fire']")
     fire.click()
 
-
 def sign_out(driver):
     try:
         driver.get("https://dev.to/signout_confirm")
@@ -55,17 +55,17 @@ def sign_out(driver):
     except Exception as e:
         print(f"Error signing out: {e}")
 
-
 def handleStuff():
 
-    # chrome can be replaced with other browsers
+    # chrome can be replaced with other browsers(Edge, Firefox)
     driver = webdriver.Chrome()
 
+    # The url of the article you want to add the reactions to
     # url = "https://dev.to/miguelrodriguezp99/frontend-resources-v2-57mj"
-
     url = "article url"
 
-    with open("path to csv", 'r') as f:
+    # The path to the CSV file containing the usernames and passwords
+    with open("./details.csv", 'r') as f:
         users = [line.strip().split(',') for line in f.readlines()]
     
     for username, password in users:
