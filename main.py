@@ -6,14 +6,13 @@ import random
 
 def sign_in(driver, username, password):
     driver.get("https://dev.to/enter")
-    time.sleep(2)
-    
+    time.sleep(5)
     # fill in the username
-    username_input = driver.find_element(By.ID, "user_email")
+    username_input = driver.find_element(By.XPATH, "//*[@id='user_email']")
     username_input.send_keys(username)
     
     # fill in the password
-    password_input = driver.find_element(By.ID, "user_password")
+    password_input = driver.find_element(By.XPATH, "//*[@id='user_password']")
     password_input.send_keys(password)
     
     # Submit the login form by hitting return
@@ -24,15 +23,8 @@ def updoot(driver, blog_url):
     try:
         driver.get(blog_url)
         time.sleep(3)
-        
-        # Randomly scrolls the page
-        scroll_height = driver.execute_script("return document.body.scrollHeight")
-        for i in range(5):
-            driver.execute_script(f"window.scrollTo(0, {scroll_height * random.uniform(0.2, 0.8)});")
-            time.sleep(random.uniform(0.5, 2))
 
         # Locate and click on all reactions
-        time.sleep(0.5)
         like_button = driver.find_element(By.XPATH, "//*[@id='reaction-drawer-trigger']")
         like_button.click()
 
@@ -64,9 +56,10 @@ def updoot(driver, blog_url):
 def sign_out(driver):
     try:
         driver.get("https://dev.to/signout_confirm")
+        time.sleep(3)
         sign_out_button = driver.find_element(By.XPATH, "//*[@id='page-content-inner']/div[2]/form/button")
         sign_out_button.click()
-        time.sleep(2)
+        time.sleep(3)
     except Exception as e:
         print(f"Error signing out: {e}")
 
@@ -74,10 +67,9 @@ def handleStuff():
 
     used_accouts = 0
     # chrome can be replaced with other browsers(Edge, Firefox)
-    driver = webdriver.Chrome()
-
+    driver = webdriver.Firefox()
+    driver.maximize_window()
     # The url of the article you want to add the reactions to
-    # url = "https://dev.to/miguelrodriguezp99/frontend-resources-v2-57mj"
     url = "article url"
 
     # The path to the CSV file containing the usernames and passwords
@@ -86,8 +78,10 @@ def handleStuff():
     
     for username, password in users:
         try:
+            time.sleep(2)
             sign_in(driver, username, password)
 
+            time.sleep(2)
             success = updoot(driver, url)
             if(success):
                 used_accouts += 1
