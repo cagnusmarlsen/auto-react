@@ -24,6 +24,8 @@ def updoot(driver, blog_url):
         driver.get(blog_url)
         time.sleep(3)
 
+        reaction_count_before = driver.find_element(By.XPATH, "//*[@id='reaction_total_count']").text
+        time.sleep(0.5)
         # Locate and click on all reactions
         like_button = driver.find_element(By.XPATH, "//*[@id='reaction-drawer-trigger']")
         like_button.click()
@@ -48,6 +50,13 @@ def updoot(driver, blog_url):
         save_button = driver.find_element(By.XPATH, "//*[@id='reaction-butt-readinglist']")
         save_button.click()
 
+        time.sleep(1)
+        reaction_count_after = driver.find_element(By.XPATH, "//*[@id='reaction_total_count']").text
+        
+        time.sleep(0.5)
+        if(reaction_count_before == reaction_count_after):
+            updoot(driver, blog_url)
+        
         return True
     
     except Exception as e:
@@ -70,7 +79,7 @@ def handleStuff():
     driver = webdriver.Firefox()
     driver.maximize_window()
     # The url of the article you want to add the reactions to
-    url = "article url"
+    url = "https://dev.to/jayantbh/frontend-dev-data-structures-algorithms-how-dsa-can-power-your-react-app-491a"
 
     # The path to the CSV file containing the usernames and passwords
     with open("./details.csv", 'r') as f:
